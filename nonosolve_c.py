@@ -270,74 +270,58 @@ def draw_in_terminal():
         terminal.printf(1, rw, rows[rw].body())
         for cl in range(len(cols)):
             terminal.printf(len(rows) + cl + 2, rw, cols[cl].body()[rw])
-    # time.sleep(0.1)
+    time.sleep(0)
     terminal.refresh()
 
 
-squished = [[]*len(rows)]
+
+squished = [[] for rw in rows]
+drop = True
+advance = 1
 
 while True:
-    err = False
-
-    if rows[r_i].wiggleRoom == 0:
-        if not check_row(r_i, rows, cols, exact=True):
-            err = True
-
-    while not check_row(r_i, rows, cols, exact=False):
-        tf = rows[r_i].move_one()
-        if tf:
-            draw_in_terminal()
-        else:
-            print('_ERR_')
-            err = True
-            break
-        print(tf)
-
-    if not err:
-        squished = []
-        if not check_row(r_i, rows, cols, exact=True):
-            for i in range(len(rows[r_i].body())):
-                char = rows[r_i].body()[i]
-                if char == '.' and cols[i].body()[r_i] == '#':
-                    if squish_down_from(r_i, cols[i]):
-                        squished.append(i)
-
-            draw_in_terminal()
-
-        if check_row(r_i, rows, cols, exact=True):
-            r_i += 1
-            if r_i == len(rows):
-                break
-
-        else:
-            for i in squished:
-                move_up_from(r_i, cols[i])
-            tf = rows[r_i].move_one()
-            if tf:
-                draw_in_terminal()
-            else:
-                print('ERR2')
-                err = True
-            print(tf)
-
-    elif r_i < 0:
-        print("No Solution")
+    if r_i == len(rows):
         break
+    draw_in_terminal()
 
-    if err:
-        rows[r_i].reset()
-        r_i -= 1
-        for i in range(len(rows[r_i].body())):
-            char = rows[r_i].body()[i]
-            if char == '.':
-                move_up_from(r_i, cols[i])
+    if not check_row(r_i, rows, cols):
+        if not rows[r_i].move_one():
+            advance = -1
+            r_i += advance
+            while True:
+                for sq in squished[r_i]:
+                    move_up_from(r_i, cols[sq])
+                draw_in_terminal()
+                if not rows[r_i].move_one():
+                    r_i += advance
+                else:
+                    break
         draw_in_terminal()
 
-        tf = rows[r_i].move_one()
-        if tf:
+    else:
+        if not check_row(r_i, rows, cols, exact=True):
+            squished[r_i] = []
+            rbody = rows[r_i].body()
+            for c in range(len(rbody)):
+                if rbody[c] == '.' and cols[c].body()[r_i] == '#':
+                    if squish_down_from(r_i, cols[c]):
+                        squished[r_i].append(c)
             draw_in_terminal()
+
+        if not check_row(r_i, rows, cols, exact=True):
+            while True:
+                for sq in squished[r_i]:
+                    move_up_from(r_i, cols[sq])
+                draw_in_terminal()
+                if not rows[r_i].move_one():
+                    advance = -1
+                    r_i += advance
+                else:
+                    break
         else:
-            r_i -= 1
+            advance = 1
+            r_i += advance
+
 
 for row in range(len(rows)):
     print(rows[row].body(), '|', end='')
@@ -346,7 +330,7 @@ for row in range(len(rows)):
     print('|')
 
 draw_in_terminal()
-terminal.printf(0, 10, 'Solved!')
+terminal.printf(0, len(rows), 'Solved!')
 terminal.refresh()
 while terminal.read != terminal.TK_CLOSE:
     pass
