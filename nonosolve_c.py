@@ -215,7 +215,7 @@ c9 = Column(10, [1, 3])
 cols = [c0, c1, c2, c3, c4, c5, c6, c7, c8, c9]
 # End of input
 '''
-
+'''
 # Input
 # 15 x 15
 # Rows:
@@ -254,10 +254,63 @@ c13 = Column(15, [7])
 c14 = Column(15, [4])
 
 cols = [c00, c01, c02, c03, c04, c05, c06, c07, c08, c09, c10, c11, c12, c13, c14]
+'''
+
+r00 = Row(25, [3])
+r01 = Row(25, [2, 2])
+r02 = Row(25, [2, 2])
+r03 = Row(25, [3, 2])
+r04 = Row(25, [3, 2])
+r05 = Row(25, [4, 2])
+r06 = Row(25, [8])
+r07 = Row(25, [3, 2])
+r08 = Row(25, [1, 5, 3, 1, 2])
+r09 = Row(25, [2, 13, 1, 1])
+r10 = Row(25, [3, 7, 5])
+r11 = Row(25, [1, 2])
+r12 = Row(25, [1, 1, 1, 2, 3])
+r13 = Row(25, [1, 2, 2, 1, 5])
+r14 = Row(25, [1, 2, 8, 2, 1])
+r15 = Row(25, [3, 2, 2, 2, 5])
+r16 = Row(25, [2, 1, 2, 4, 9])
+r17 = Row(25, [7, 6, 1])
+r18 = Row(25, [7, 10])
+r19 = Row(25, [1, 13])
+
+rows = [r00, r01, r02, r03, r04, r05, r06, r07, r08, r09, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19]
+
+c00 = Column(20, [2, 2])
+c01 = Column(20, [2, 5])
+c02 = Column(20, [2, 1, 2])
+c03 = Column(20, [5, 2])
+c04 = Column(20, [2, 2, 2])
+c05 = Column(20, [2, 2, 4])
+c06 = Column(20, [2, 2])
+c07 = Column(20, [2, 2, 1])
+c08 = Column(20, [2, 5, 2])
+c09 = Column(20, [3, 3, 3])
+c10 = Column(20, [3, 2, 1, 4])
+c11 = Column(20, [5, 2, 1, 4])
+c12 = Column(20, [1, 3, 2, 1, 4])
+c13 = Column(20, [1, 3, 2, 1, 4])
+c14 = Column(20, [1, 2, 2, 2, 3])
+c15 = Column(20, [2, 2, 3, 4, 2])
+c16 = Column(20, [2, 4, 2, 2])
+c17 = Column(20, [2, 3, 1, 2])
+c18 = Column(20, [4, 2, 3, 1, 1])
+c19 = Column(20, [2, 3, 3, 1])
+c20 = Column(20, [1, 1, 2, 1, 2])
+c21 = Column(20, [1, 1, 2, 2])
+c22 = Column(20, [2, 1, 2, 2])
+c23 = Column(20, [2, 2, 2])
+c24 = Column(20, [2, 2])
+
+cols = [c00, c01, c02, c03, c04, c05, c06, c07, c08, c09, c10, c11,
+        c12, c13, c14, c15, c16, c17, c18, c19, c20, c21, c22, c23, c24]
 
 # Creates terminal to display
 terminal.open()
-terminal.set("window: size={}x{}, cellsize=12x12".format(len(rows) + len(cols) + 2, len(rows) + 1))
+terminal.set("window: size={}x{}, cellsize=12x12".format(2*len(cols) + 2, len(rows) + 1))
 
 
 r_i = 0
@@ -269,10 +322,9 @@ def draw_in_terminal():
     for rw in range(len(rows)):
         terminal.printf(1, rw, rows[rw].body())
         for cl in range(len(cols)):
-            terminal.printf(len(rows) + cl + 2, rw, cols[cl].body()[rw])
+            terminal.printf(len(cols) + cl + 2, rw, cols[cl].body()[rw])
     time.sleep(0)
     terminal.refresh()
-
 
 
 squished = [[] for rw in rows]
